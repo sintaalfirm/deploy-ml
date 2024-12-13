@@ -10,15 +10,18 @@ model = load_model("Skinalyze.h5")
 
 @app.route("/")
 def home():
-    return "Welcome to the Flask API!"
+    return "Welcome to the Skinalyze API!"
 
 @app.route("/predict", methods=["POST"])
 def predict():
-    # Mendapatkan input dari request JSON
-    data = request.json
-    input_data = np.array(data["input"]).reshape(1, -1)  # Sesuaikan format input model
-    prediction = model.predict(input_data).tolist()
-    return jsonify({"prediction": prediction})
+    try:
+        # Mendapatkan input dari request JSON
+        data = request.json
+        input_data = np.array(data["input"]).reshape(1, -1)  # Sesuaikan format input model
+        prediction = model.predict(input_data).tolist()
+        return jsonify({"prediction": prediction})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8080)  # Port 8080 digunakan oleh Render
+    app.run(host="0.0.0.0", port=8080)  # Port 8080 digunakan oleh Vercel
